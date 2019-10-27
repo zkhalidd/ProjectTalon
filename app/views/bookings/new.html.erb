@@ -1,0 +1,139 @@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+  <div class="col-md-6 px-0">
+    <h1 class="display-4 font-italic">New Booking</h1>
+    <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
+  </div>
+</div>
+
+<div class="row justify-content-md-center">
+  <div class="col-8">
+    <%= form_tag create_booking_url, method: :post do %>
+      <div class="form-group">
+        <%= label_tag :booking_date %><br />
+        <%= text_field_tag  'booking[booking_date]', Date.today.strftime('%m-%d-%Y'), min: Date.today.strftime('%m-%d-%Y'), max: (Date.today+2.months).strftime('%m-%d-%Y'), autofocus: true, autocomplete: "booking-date", class: 'form-control', onchange: "$('.appointment-date').html($(this).val())" %>
+      </div>
+      <div class="row mb-2">
+        <div class="col-6">
+          <div class="card card-default">
+            <div class="card-header">Select Service</div>
+            <div class="card-body">
+              <% Service.all.each_with_index do |service, index| %>
+                <div class="form-group">
+                  <label>
+                    <%= radio_button_tag 'booking[service_id]', service.id, index == 0, onchange: "$('.selected-service').html($(this).parent().text())" %>
+                    <%= service.name %>
+                  </label>
+                </div>
+              <% end -%>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card card-default">
+            <div class="card-header">Reserve your Spot!</div>
+            <div class="card-body">
+              <% Booking.slots.each_with_index do |slot, index| %>
+                <div class="form-group">
+                  <label>
+                    <%= radio_button_tag 'booking[booking_time]', slot, index==0, onchange: "$('.appointment-time').html($(this).val())" %>
+                    <%= slot %>
+                  </label>
+                </div>
+              <% end -%>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card card-default">
+        <div class="card-header">Appointment Date: <span style="font-weight: bold;" class="appointment-date"><%= Date.today.strftime('%m-%d-%Y') %></span> Appointment Time: <span style="font-weight: bold;" class="appointment-time">3:30 pm – 5:30 pm</span></div>
+        <div class="card-body">
+          <div class="form-group">
+            <div class="row mb-2">
+              <div class="col-5">
+                <label style="font-weight: bold; float: right;">First Name</label>
+              </div>
+              <div class="col-7">
+                <%= text_field_tag 'customer[first_name]', '', class: 'form-control', required: true %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row mb-2">
+              <div class="col-5">
+                <label style="font-weight: bold; float: right;">Last Name</label>
+              </div>
+              <div class="col-7">
+                <%= text_field_tag 'customer[last_name]', '', class: 'form-control', required: true %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row mb-2">
+              <div class="col-5">
+                <label style="font-weight: bold; float: right;">Mobile Number</label>
+              </div>
+              <div class="col-7">
+                <%= telephone_field_tag 'customer[phone_number]', '', class: 'form-control', required: true %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row mb-2">
+              <div class="col-5">
+                <label style="font-weight: bold; float: right;">Email</label>
+              </div>
+              <div class="col-7">
+                <%= text_field_tag 'customer[email]', '', class: 'form-control', required: true %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row mb-2">
+              <div class="col-5">
+                <label style="font-weight: bold; float: right;">Service Selected</label>
+              </div>
+              <div class="col-7">
+                <p class="selected-service"><%= Service.first&.name %></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="row mb-2">
+              <div class="col-5">
+                <label style="font-weight: bold; float: right;">Comments/Special Requests</label>
+              </div>
+              <div class="col-7">
+                <%= text_area_tag 'booking[special_request]', '', class: 'form-control', rows: 2 %>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+      <br>
+      <div class="form-group">
+        <center>
+          <%= submit_tag 'Confirm Appointment', class: 'btn btn-success' %>
+        </center>
+      </div>
+    <% end -%>
+
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  $('#booking_booking_date').datepicker({
+      minDate: new Date(),
+      dateFormat: "dd-mm-yy"
+  })
+</script>

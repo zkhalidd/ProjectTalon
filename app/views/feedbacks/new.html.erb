@@ -1,0 +1,24 @@
+<div class="row justify-content-md-center">
+  <div class="col-6">
+    <br>
+    <div class="card card-default">
+      <div class="card-header">Leave a Feedback</div>
+      <div class="card-body">
+        <%= form_tag(create_booking_feedback_url(@booking)) do %>
+          <p>Please provide feedback for your booking at <b><%= @booking.date_and_time %></b> for service: <b><%= @booking.service.name %></b></p>
+          <div class="form-group">
+            <%= label_tag :feedback %><br />
+            <%= text_area_tag 'feedback[content]', '', autocomplete: "content", class: 'form-control', rows: 2, required: true %>
+          </div>
+
+          <%= hidden_field_tag 'feedback[booking_id]', @booking.id %>
+
+          <div class="form-group">
+            <%= submit_tag "Leave a Feedback", class: 'btn btn-success' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <br>
+  </div>
+</div>
